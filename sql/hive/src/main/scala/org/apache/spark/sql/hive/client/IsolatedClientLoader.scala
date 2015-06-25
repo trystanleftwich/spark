@@ -46,6 +46,7 @@ private[hive] object IsolatedClientLoader {
   }
 
   def hiveVersion(version: String): HiveVersion = version match {
+    case "12-mapr" | "0.12-mapr" | "0.12.0-mapr" => hive.v12mapr
     case "12" | "0.12" | "0.12.0" => hive.v12
     case "13" | "0.13" | "0.13.0" | "0.13.1" => hive.v13
   }
@@ -121,7 +122,7 @@ private[hive] class IsolatedClientLoader(
     name.contains("log4j") ||
     name.startsWith("org.apache.spark.") ||
     name.startsWith("scala.") ||
-    name.startsWith("com.google") ||
+    //name.startsWith("com.google") ||
     name.startsWith("java.lang.") ||
     name.startsWith("java.net") ||
     sharedPrefixes.exists(name.startsWith)

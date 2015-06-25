@@ -1771,6 +1771,35 @@
       </dependencies>
     </profile>
 
+   <profile>
+      <id>mapr402</id>
+      <properties>
+        <hadoop.version>2.5.1-mapr-1501</hadoop.version>
+        <yarn.version>2.5.1-mapr-1501</yarn.version>
+        <hbase.version>0.98.7-mapr-1501-r1</hbase.version>
+        <zookeeper.version>3.4.5-mapr-1406</zookeeper.version>
+        <protobuf.version>2.5.0</protobuf.version>
+      </properties>
+      <dependencies>
+        <dependency>
+          <groupId>org.apache.curator</groupId>
+          <artifactId>curator-recipes</artifactId>
+          <version>2.4.0</version>
+          <exclusions>
+            <exclusion>
+              <groupId>org.apache.zookeeper</groupId>
+              <artifactId>zookeeper</artifactId>
+            </exclusion>
+          </exclusions>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.zookeeper</groupId>
+          <artifactId>zookeeper</artifactId>
+          <version>3.4.5-mapr-1406</version>
+        </dependency>
+      </dependencies>
+    </profile>
+
     <profile>
       <id>hive-thriftserver</id>
       <modules>

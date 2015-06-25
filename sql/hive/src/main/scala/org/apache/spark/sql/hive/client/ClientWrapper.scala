@@ -138,7 +138,7 @@ private[hive] class ClientWrapper(
     // with the HiveConf in `state` to override the context class loader of the current
     // thread.
     version match {
-      case hive.v12 =>
+      case hive.v12 | hive.v12mapr =>
         classOf[SessionState]
           .callStatic[SessionState, SessionState]("start", state)
       case hive.v13 =>
@@ -208,7 +208,7 @@ private[hive] class ClientWrapper(
           case TableType.INDEX_TABLE => IndexTable
         },
         location = version match {
-          case hive.v12 => Option(h.call[URI]("getDataLocation")).map(_.toString)
+          case hive.v12 | hive.v12mapr => Option(h.call[URI]("getDataLocation")).map(_.toString)
           case hive.v13 => Option(h.call[Path]("getDataLocation")).map(_.toString)
         },
         inputFormat = Option(h.getInputFormatClass).map(_.getName),
@@ -241,7 +241,7 @@ private[hive] class ClientWrapper(
     qlTable.setCreateTime((System.currentTimeMillis() / 1000).asInstanceOf[Int])
 
     version match {
-      case hive.v12 =>
+      case hive.v12 | hive.v12mapr =>
         table.location.map(new URI(_)).foreach(u => qlTable.call[URI, Unit]("setDataLocation", u))
       case hive.v13 =>
         table.location
@@ -289,7 +289,7 @@ private[hive] class ClientWrapper(
   override def getAllPartitions(hTable: HiveTable): Seq[HivePartition] = withHiveState {
     val qlTable = toQlTable(hTable)
     val qlPartitions = version match {
-      case hive.v12 =>
+      case hive.v12 | hive.v12mapr =>
         client.call[metadata.Table, JSet[metadata.Partition]]("getAllPartitionsForPruner", qlTable)
       case hive.v13 =>
         client.call[metadata.Table, JSet[metadata.Partition]]("getAllPartitionsOf", qlTable)
@@ -325,7 +325,7 @@ private[hive] class ClientWrapper(
       // The remainder of the command.
       val cmd_1: String = cmd_trimmed.substring(tokens(0).length()).trim()
       val proc: CommandProcessor = version match {
-        case hive.v12 =>
+        case hive.v12 | hive.v12mapr =>
           classOf[CommandProcessorFactory]
             .callStatic[String, HiveConf, CommandProcessor]("get", tokens(0), conf)
         case hive.v13 =>
@@ -348,7 +348,7 @@ private[hive] class ClientWrapper(
               val res = new JArrayList[String]
               driver.call[JArrayList[String], Boolean]("getResults", res)
               res.toSeq
-            case hive.v13 =>
+            case hive.v13 | hive.v12mapr =>
               val res = new JArrayList[Object]
               driver.call[JList[Object], Boolean]("getResults", res)
               res.map { r =>

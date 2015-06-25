@@ -26,6 +26,7 @@ package object client {
     case object v10 extends HiveVersion("0.10.0", true)
     case object v11 extends HiveVersion("0.11.0", false)
     case object v12 extends HiveVersion("0.12.0", false)
+    case object v12mapr extends HiveVersion("0.12.0", false)
     case object v13 extends HiveVersion("0.13.1", false)
   }
   // scalastyle:on
